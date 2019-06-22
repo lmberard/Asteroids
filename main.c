@@ -20,18 +20,17 @@ int main() {
 	int dormir = 0;
 
 	//zona de variables-----------------
-	const float chorro[3][2] = {
-		{-NAVE_GRANDE_TOBERA_X, NAVE_GRANDE_TOBERA_Y},
-		{0, NAVE_GRANDE_TOBERA_Y},
-		{NAVE_GRANDE_TOBERA_X, NAVE_GRANDE_TOBERA_Y}
-	};
+	//EL DIBUJO DE LA NAVE, DE LOS DISPAROS Y DE LOS ASTEROIDES ESTAN EN EL ARCHIVO BINARIO (NO HAY CHORRO)
+	/*
+	FILE *f;
+	if(!(f = fopen ("sprites.bin", rb))
+		return EXIT_FAILURE;
+	*/
 	
-	float **vector_chorro = NULL;
-	size_t tam_chorro = sizeof(chorro) / sizeof(chorro[0]);
-
+	/*HAY QUE HACER UN TDA PARA CADA COSA */
+	
 	float **vector_nave = NULL;
 	size_t nave_tam = sizeof(nave_grande) / sizeof(nave_grande[0]);
-	//la nave cambia que eso creo que esta en el archivo binario jeje lol ni idea bro, idem con el chorro
 
 	float dt = 1/(float)JUEGO_FPS;
 	float tiempo = 0;
@@ -57,10 +56,8 @@ int main() {
 						potencia ++;		
 						break;
 
-					case SDLK_DOWN:	
-						if(potencia <= NAVE_POTENCIA_INICIAL)
-							break;
-						potencia --;
+					case SDLK_SPACE:	
+						//ACA TIENE QUE DISPARAR 
 						break;
 
 					case SDLK_RIGHT:				
@@ -80,23 +77,19 @@ int main() {
         	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00);
 
 		// BEGIN código del alumno-------------------------------------
-        	//paso la nave y el chorro a un vector dinamico
-        	//paso la nave y el chorro a un vector dinamico
-			if(!(vector_chorro = matriz_a_vector(chorro, tam_chorro)))
-				return EXIT_FAILURE;
+		
 			if(!(vector_nave = matriz_a_vector(nave_grande, nave_tam)))
 				return EXIT_FAILURE;
 
-			vector_chorro[1][1] -= potencia; 
-
+			//ZONA PARA MODIFICAR LAS COSAS
 			rotar_vector(vector_nave, nave_tam, angulo);
-			rotar_vector(vector_chorro, tam_chorro, angulo);
 
 			modificar_parametros_nave(&x_anterior, &posicion_x, &posicion_y, &velocidad_y, &velocidad_x, &angulo, &dt, &potencia);
 			verificar_limites_pantalla(&posicion_x, &posicion_y);
 
 			trasladar_vector(vector_nave, nave_tam, posicion_x, posicion_y);
-			trasladar_vector(vector_chorro, tam_chorro, posicion_x, posicion_y);
+		
+			//ACA HABRIA QUE PONERLE UNA 
 
 			tiempo += dt;
 
@@ -105,7 +98,8 @@ int main() {
 
 
 			dibujar_vector(vector_nave, nave_tam, ESCALA, renderer);
-			dibujar_vector(vector_chorro, tam_chorro, ESCALA, renderer);
+			//DIBUJAR DISPARO
+			//DIBUJAR ASTEROIDES 
 
 			dibujar_parametros(puntos, tiempo, caracteres, tam_caracteres, renderer);
 			////////////////////////////////////////////////
