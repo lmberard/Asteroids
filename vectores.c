@@ -34,7 +34,6 @@ float **crear_vector(size_t n){
 	if(v == NULL){
 		return NULL;
 	}
-
 	for(j = 0; j < n; j++){
 		v[j] = malloc(COLUMNAS * sizeof(float));
 
