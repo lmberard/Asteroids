@@ -96,8 +96,7 @@ void *iterador_eliminar(iterador_t *li) {
       {
          ant->sig = actual->sig;
          free(actual);
-      }
-      else
+      }      else
           ant = actual;
    }
 	if((iterador_siguiente(iterador))==false)
