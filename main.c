@@ -5,6 +5,11 @@
 #include "diccionario.h"
 #include "renderizar.h"
 #include "config.h"
+#include "graficador.h"
+#include "objetos.h"
+#include "lista.h"
+#include "disparo.h"
+
 
 int main() {
 	//giladas para que aparezca la pantalla del juego
@@ -18,26 +23,17 @@ int main() {
 	SDL_SetWindowTitle(window, "Asteroids");
 
 	int dormir = 0;
-
-	//zona de variables-----------------
-	const float chorro[3][2] = {
-		{-NAVE_GRANDE_TOBERA_X, NAVE_GRANDE_TOBERA_Y},
-		{0, NAVE_GRANDE_TOBERA_Y},
-		{NAVE_GRANDE_TOBERA_X, NAVE_GRANDE_TOBERA_Y}
-	};
 	
-	float **vector_chorro = NULL;
-	size_t tam_chorro = sizeof(chorro) / sizeof(chorro[0]);
-
-	float **vector_nave = NULL;
-	size_t nave_tam = sizeof(nave_grande) / sizeof(nave_grande[0]);
-	//la nave cambia que eso creo que esta en el archivo binario jeje lol ni idea bro, idem con el chorro
-
+	if(graficador_inicializar(ARCHIVO_BIN,VENTANA_ANCHO, VENTANA_ALTO))//Aca levanto todos los sprites del archivo binario
+		return EXIT_FAILURE;
+	//zona de variables-----------------
+	nave_t nave;
 	float dt = 1/(float)JUEGO_FPS;
 	float tiempo = 0;
 	float puntos = 0;
-	float angulo, velocidad_x, velocidad_y, posicion_y, posicion_x, x_anterior, potencia;
-	inicializar_valores(&posicion_x, &posicion_y, &velocidad_x, &velocidad_y, &angulo, &potencia, &x_anterior);			
+
+	inicializar_valores(&nave);//Inicializo los valores de la nave
+	lista_t *lista_disparo = lista_crear(); //creo la lista de disparos,debo eliminarla al final		
 	
 	//variable para la cantidad de vidas
 	//hacer asteroides
@@ -52,24 +48,18 @@ int main() {
 				// BEGIN código del alumno------------------------------------
 				switch(event.key.keysym.sym) {
 					case SDLK_UP:
-						if(potencia >= NAVE_MAX_POTENCIA)
-							break;
-						potencia ++;		
+						computar_pot(&nave);//Aca falta hacer que la potencia sea por un solo instante, osea, un imnpulso, no cte.
 						break;
-
-					case SDLK_DOWN:	
-						if(potencia <= NAVE_POTENCIA_INICIAL)
-							break;
-						potencia --;
+					case SDLK_SPACE:
+						crear_disparo(lista_disparo,nave);//Esta funcion crea un disparo y lo agrega a la lista de disparos
 						break;
-
 					case SDLK_RIGHT:				
-						angulo -= NAVE_ROTACION_PASO;
+						nave.angulo -= NAVE_ROTACION_PASO;
 						break;
 
 					case SDLK_LEFT:					
-						angulo += NAVE_ROTACION_PASO;
-					break;
+						nave.angulo += NAVE_ROTACION_PASO;
+						break;
 				}
 				// END código del alumno--------------------------------------------------
 			}
@@ -80,39 +70,24 @@ int main() {
         	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00);
 
 		// BEGIN código del alumno-------------------------------------
-        	//paso la nave y el chorro a un vector dinamico
-        	//paso la nave y el chorro a un vector dinamico
-			if(!(vector_chorro = matriz_a_vector(chorro, tam_chorro)))
-				return EXIT_FAILURE;
-			if(!(vector_nave = matriz_a_vector(nave_grande, nave_tam)))
-				return EXIT_FAILURE;
+        		nave.potencia -= nave.potencia * 0.1*dt;//Esto no funciona
 
-			vector_chorro[1][1] -= potencia; 
+			nave_mover(&nave, dt);//Muevo la nave en un fx que modifica todos sus parametros
 
-			rotar_vector(vector_nave, nave_tam, angulo);
-			rotar_vector(vector_chorro, tam_chorro, angulo);
-
-			modificar_parametros_nave(&x_anterior, &posicion_x, &posicion_y, &velocidad_y, &velocidad_x, &angulo, &dt, &potencia);
-			verificar_limites_pantalla(&posicion_x, &posicion_y);
-
-			trasladar_vector(vector_nave, nave_tam, posicion_x, posicion_y);
-			trasladar_vector(vector_chorro, tam_chorro, posicion_x, posicion_y);
+			disparos_modificar(lista_disparo,dt,renderer);//Esta fx modifica los parametros de todos los disparos y en simulatneo los grafica, esto lo hice asi para recorrer la lista una sola vez en vez de varias veces
 
 			tiempo += dt;
 
 			////////////////ZONA DE DIBUJO/////////////////
 			dibujar_palabra("ASTEROIDS BY MARTINA Y LUCIA", caracteres, tam_caracteres, 400, 15, ESCALA, renderer);
 
-
-			dibujar_vector(vector_nave, nave_tam, ESCALA, renderer);
-			dibujar_vector(vector_chorro, tam_chorro, ESCALA, renderer);
-
+			if(nave_dibujar(&nave, renderer)==false)
+				break;
+		
 			dibujar_parametros(puntos, tiempo, caracteres, tam_caracteres, renderer);
 			////////////////////////////////////////////////
 			
-			destruir_vector(vector_chorro, tam_chorro);
-			destruir_vector(vector_nave, nave_tam);
-
+			
 		// END código del alumno----------------------------------------------
         SDL_RenderPresent(renderer);
 		ticks = SDL_GetTicks() - ticks;
