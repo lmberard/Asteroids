@@ -19,6 +19,8 @@ bool graficador_inicializar(const char *fn, int ancho,int alto)
 		if(fread(vector_sprites[i].coords,sizeof(float)*vector_sprites[i].n*2, 1, f) != 1)
 			return false;
 	}	
+	if(fclose(f)!=0)
+		return false;
 	return true;
 }
 
