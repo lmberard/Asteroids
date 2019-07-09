@@ -1,53 +1,27 @@
-#include "naves.h"
+#include "nave.h"
+#include "movimientos.h"
 
-const float nave_grande[28][2] = {
-	{-3, -5},
-	{-6, -2},
-	{-6, 2},
-	{-2, 6},
-	{2, 6},
-	{6, 2},
-	{6, -2},
-	{3, -5},
-	{6, -5},
-	{6, -8},
-	{8.5, -13},
-	{10, -13},
-	{7, -13},
-	{8.5, -13},
-	{6, -8},
-	{3, -8},
-	{5, -12},
-	{-5, -12},
-	{-3, -8},
-	{3, -8},
-	{-6, -8},
-	{-8.5, -13},
-	{-10, -13},
-	{-7, -13},
-	{-8.5, -13},
-	{-6, -8},
-	{-6, -5},
-	{6, -5},
-};
+void nave_mover(nave_t *nave, float dt)
+{
+	modificar_parametros_nave(nave,dt);
+	computar_pot(nave);
+	verificar_limites_pantalla(nave);
+}
 
-const float nave_chica[17][2] = {
-	{-9, -11},
-	{-6, -6},
-	{-2, -6},
-	{-6, -2},
-	{-6, 2},
-	{-2, 6},
-	{2, 6},
-	{6, 2},
-	{6, -2},
-	{2, -6},
-	{-2, -6},
-	{-1.5, -6},
-	{-4, -9.5},
-	{4, -9.5},
-	{1.5, -6},
-	{6, -6},
-	{9, -11},
-};
+bool nave_dibujar(nave_t *nave, SDL_Renderer *r)
+{
+	//fprintf(stderr, "entro a navedibujar\n");
+	if((graficador_dibujar(r, NOMBRE_SPRITE_NAVE, ESCALA_NAVE, nave->posicion_x, nave->posicion_y, nave->angulo))==false);
+	if((graficador_dibujar(r, NOMBRE_SPRITE_CHORRO, ESCALA_NAVE, nave->posicion_x, nave->posicion_y, nave->angulo))==false);
+/*EL chorro hay que modificarlo con la potencia,eso está sin hacer*/
+	return true;
+}
+void modificar_parametros_nave(nave_t *nave,float dt)
+{
+	nave->velocidad_y = computar_velocidad (nave->velocidad_y,nave->potencia*cos(nave->angulo),dt);
+	nave->velocidad_x = computar_velocidad(nave->velocidad_x, nave->potencia*sin(-nave->angulo),dt);
 
+	nave->posicion_y = computar_posicion(nave->posicion_y, nave->velocidad_y, dt);
+	nave->posicion_x = computar_posicion(nave->posicion_x, nave->velocidad_x, dt);
+}
+				
