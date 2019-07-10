@@ -9,7 +9,7 @@
 #include "objetos.h"
 #include "lista.h"
 #include "disparo.h"
-
+#include "asteroide.h"
 
 int main() {
 	//giladas para que aparezca la pantalla del juego
@@ -34,9 +34,13 @@ int main() {
 
 	inicializar_valores(&nave);//Inicializo los valores de la nave
 	lista_t *lista_disparo = lista_crear(); //creo la lista de disparos,debo eliminarla al final		
-	
-	//variable para la cantidad de vidas
-	//hacer asteroides
+	lista_t *lista_asteroides = lista_crear();
+	int vidas_disponibles = CANT_VIDAS_INICIAL;
+
+	for(size_t i=0; i<=CANT_ASTEROIDES_INICIAL; i++)//Aca estoy creando los asteroides que aparecen apenas empieza el juego
+	{	
+		crear_asteroide(lista_asteroides);
+	}
 
 	//end zona de variables-------------------------------
 	unsigned int ticks = SDL_GetTicks();
@@ -65,17 +69,15 @@ int main() {
 			}
 			continue;
 		}
-        	SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
-        	SDL_RenderClear(renderer);
-        	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00);
+        		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+        		SDL_RenderClear(renderer);
+        		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00);
 
-		// BEGIN código del alumno-------------------------------------
-        		nave.potencia -= nave.potencia * 0.1*dt;//Esto no funciona
-
+			// BEGIN código del alumno-------------------------------------
+			nave.potencia -= nave.potencia * 0.1*dt;//Esto no funciona
 			nave_mover(&nave, dt);//Muevo la nave en un fx que modifica todos sus parametros
-
 			disparos_modificar(lista_disparo,dt,renderer);//Esta fx modifica los parametros de todos los disparos y en simulatneo los grafica, esto lo hice asi para recorrer la lista una sola vez en vez de varias veces
-
+			asteroide_modificar(lista_asteroides,dt,renderer);
 			tiempo += dt;
 
 			////////////////ZONA DE DIBUJO/////////////////
@@ -85,6 +87,7 @@ int main() {
 				break;
 		
 			dibujar_parametros(puntos, tiempo, caracteres, tam_caracteres, renderer);
+			dibujar_vidas(&nave, renderer,vidas_disponibles);
 			////////////////////////////////////////////////
 			
 			
@@ -103,6 +106,8 @@ int main() {
 	// BEGIN código del alumno------------------------------------------------
 	graficador_finalizar();
 	lista_destruir(lista_disparo,free);
+	lista_destruir(lista_asteroides,free);
+
 	// END código del alumno--------------------------------------------------
 
 	SDL_DestroyRenderer(renderer);
