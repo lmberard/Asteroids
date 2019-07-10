@@ -50,3 +50,12 @@ bool graficador_dibujar(SDL_Renderer *r, const char *nombre,float escala, float 
 	}	
 	return true;
 }
+
+void graficador_finalizar()
+{
+	for(size_t i=0; i<=7;i++)//Harcodeado
+	{
+		free(vector_sprites[i].coords);
+	}
+	free(vector_sprites);
+}
