@@ -28,8 +28,29 @@
 #define NOMBRE_SPRITE_AST_4 "ROCK4"
 #define NOMBRE_SPRITE_DISPARO "SHOT"
 
+//defines vidas
+#define CANT_VIDAS_INICIAL 4
+#define ANGULO_VIDAS PI/2
+#define POS_X_VIDAS 100
+#define POS_Y_VIDAS 645
+#define OFFSET 11
+
+
+//Defines asteroides
+#define VELOCIDAD_MAX_ASTEROIDE 15
+#define VELOCIDAD_MIN_ASTEROIDE 1
+#define RADIO_MIN_ASTEROIDE 8
+#define RADIO_MAX_ASTEROIDE 32
+#define CANT_ASTEROIDES_SPRITE 4
+#define CANT_ASTEROIDES_INICIAL 4
+#define RADIO_AST_1 8
+#define RADIO_AST_2 16
+#define RADIO_AST_3 32
+
+//defines graficador
 #define ESCALA_DISPARO 3
 #define ESCALA_NAVE 3
+#define ESCALA_VIDAS 0.6
 
 #endif // _CONFIG_H_
 
