@@ -46,5 +46,6 @@ void dibujar_parametros(float puntos, float tiempo,
 						const diccionario_t caracteres[], size_t tam_caracteres, 
 						SDL_Renderer *renderer);
 
+bool dibujar_vidas(nave_t *nave, SDL_Renderer *r, size_t cant_vidas);
 
 #endif // _RENDERIZAR_H_
