@@ -20,7 +20,7 @@ typedef struct{
 	}sprite_t;
 
 bool graficador_inicializar(const char *fn, int ancho,int alto);
-
+void graficador_finalizar();
 bool graficador_dibujar(SDL_Renderer *r,const char *nombre,float escala, float x, float y, float angulo);
 
 #endif
