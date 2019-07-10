@@ -17,6 +17,7 @@ typedef struct asteroide{
 	float velocidad_y;
 	float angulo;
 	float radio;
+	char* nombre;
 } asteroide_t;
 
 typedef struct disparo{
