@@ -60,3 +60,15 @@ void dibujar_parametros(float puntos, float tiempo,
 
 }
 
+
+
+bool dibujar_vidas(nave_t *nave, SDL_Renderer *r, size_t cant_vidas)//VALIDAR
+{
+	int offset=0;
+	for (size_t i=0;i<cant_vidas;i++)
+	{
+	if((graficador_dibujar(r,NOMBRE_SPRITE_NAVE,ESCALA_VIDAS,POS_X_VIDAS + offset,POS_Y_VIDAS,ANGULO_VIDAS))==false);
+		offset +=OFFSET;
+	}
+	return true;
+}
