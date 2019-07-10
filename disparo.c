@@ -23,7 +23,7 @@ void disparos_modificar(lista_t *lista, float dt, SDL_Renderer *renderer)
 		}
 		iterador_siguiente(iterador_disparos);//validar
 	}
-	//iterador_eliminar(iterador_disparos);//Hay que eliminar el iterador pero esta linea rompe
+	iterador_destruir(iterador_disparos);
 }
 
 bool disparo_dibujar(disparo_t *disparo, SDL_Renderer *r)//VALIDAR
