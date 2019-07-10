@@ -5,6 +5,9 @@ INSTALL_DIR := /usr/sbin
 
 all: tp2
 
+asteroide.o: graficador.h movimientos.h lista.h objetos.h iterador.h asteroide.h
+	$(CC) $(CFLAGS) asteroide.c
+	
 lista.o: lista.h
 	$(CC) $(CFLAGS) lista.c
 
@@ -36,11 +39,12 @@ renderizar.o: renderizar.c renderizar.h diccionario.h
 	$(CC) $(CFLAGS) renderizar.c
 
 
-main.o: main.c config.h nave.h movimientos.h diccionario.h vectores.h renderizar.h graficador.h objetos.h disparo.h
+main.o: main.c config.h nave.h movimientos.h diccionario.h vectores.h renderizar.h graficador.h objetos.h disparo.h asteroide.h
 	$(CC) $(CFLAGS) main.c
 
-tp2: main.o nave.o caracteres.o movimientos.o vectores.o diccionario.o renderizar.o graficador.o iterador.o lista.o disparo.o
+tp2: main.o nave.o caracteres.o movimientos.o vectores.o diccionario.o renderizar.o graficador.o iterador.o lista.o disparo.o asteroide.o
 	$(CC) $(LFLAGS) $^ -o tp2 -lSDL2 -lm
+
 
 clean:
 	rm *.o
