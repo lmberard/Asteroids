@@ -15,7 +15,6 @@ void disparos_modificar(lista_t *lista, float dt, SDL_Renderer *renderer)
 	while(!iterador_termino(iterador_disparos))
 	{
 		disparo_mover(iterador_actual(iterador_disparos)->dato,dt);
-		
 		disparo_dibujar(iterador_actual(iterador_disparos)->dato,renderer);//Los disparos tienen un pequeño delay no se por qué
 		if(tiempo_vida_agotado(iterador_actual(iterador_disparos)->dato))
 		{
