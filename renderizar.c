@@ -1,7 +1,5 @@
 #include "renderizar.h"
 
-
-
 void dibujar_vector(float **vector, size_t tam_vector, float escala, SDL_Renderer *renderer){
 	
 	for(int i = 0; i < tam_vector - 1; i++)
