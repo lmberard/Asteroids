@@ -21,7 +21,7 @@ graficador.o: graficador.h config.h objetos.h
 	$(CC) $(CFLAGS) graficador.c
 
 naves.o: naves.c naves.h movimientos.h
-	$(CC) $(CFLAGS) naves.c
+	$(CC) $(CFLAGS) nave.c
 
 caracteres.o: caracteres.c caracteres.h naves.h
 	$(CC) $(CFLAGS) caracteres.c
