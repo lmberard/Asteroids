@@ -10,14 +10,11 @@ void asteroide_modificar(lista_t *lista, float dt, SDL_Renderer *renderer)
 {
 	if (lista_es_vacia(lista))
 		return;
-	//fprintf(stderr, "entro a asteroide_modificar\n");
 
 	iterador_t *iterador_asteroide = iterador_crear(lista);
-	//fprintf(stderr, "creo que iterador\n");
 	while(!iterador_termino(iterador_asteroide))
 	{
 		asteroide_mover(iterador_actual(iterador_asteroide)->dato,dt);
-		//fprintf(stderr, "modifico los parametros\n");
 		asteroide_dibujar(iterador_actual(iterador_asteroide)->dato,renderer);//Los asteroide tienen un pequeño delay no se por qué
 		//if choco eliminar_asteroide(eliminar asteroide ya esta hecha aca abajo)
 		iterador_siguiente(iterador_asteroide);//validar
@@ -28,7 +25,7 @@ void asteroide_modificar(lista_t *lista, float dt, SDL_Renderer *renderer)
 bool asteroide_dibujar(asteroide_t *asteroide, SDL_Renderer *r)//VALIDAR
 {
 	if((graficador_dibujar(r,asteroide->nombre, asteroide->radio , asteroide->posicion_x, asteroide->posicion_y, asteroide->angulo))==false);
-		return true;//modificar lo del nombre, debe recibir el aleatorio para saber cual dibujar
+		return true;
 }
 
 
@@ -99,7 +96,7 @@ char *asignar_sprite(int numero_sprite)//Es muy villero esto? se puede buscar ot
 	return nombre;
 }
 
-float asignar_radio(int nro_radio)//Es muy villero esto? se puede buscar otra implementacion con enum sino
+float asignar_radio(int nro_radio)//idem
 {
 	float radio;
 	switch(nro_radio)
