@@ -104,7 +104,7 @@ int main() {
 		ticks = SDL_GetTicks();
 	}
 	// BEGIN código del alumno------------------------------------------------
-	graficador_finalizar();
+	//graficador_finalizar();
 	lista_destruir(lista_disparo,free);
 	lista_destruir(lista_asteroides,free);
 
