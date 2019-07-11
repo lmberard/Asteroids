@@ -51,7 +51,7 @@ bool graficador_dibujar(SDL_Renderer *r, const char *nombre,float escala, float 
 	return true;
 }
 
-void graficador_finalizar()
+void graficador_finalizar()//esta funcion está mal
 {
 	for(size_t i=0; i<=7;i++)//Harcodeado
 	{
