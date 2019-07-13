@@ -10,6 +10,8 @@
 #include "lista.h"
 #include "iterador.h"
 
+void verificar_limites_pantalla_ast(asteroide_t *asteroide);
+
 //void asteroide_mover(asteroide_t *asteroide, float dt);
 bool asteroide_dibujar(asteroide_t *asteroide, SDL_Renderer *r);
 void crear_asteroide(lista_t *lista);
