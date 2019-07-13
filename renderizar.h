@@ -6,9 +6,12 @@
 #include <SDL2/SDL.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+#include "objetos.h"
 #include "config.h"
 #include "caracteres.h"
 #include "diccionario.h"
+
 
 #define FILA_1 20
 #define FILA_2 40
