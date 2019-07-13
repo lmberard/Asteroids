@@ -20,10 +20,10 @@ iterador.o: iterador.h lista.h
 graficador.o: graficador.h config.h objetos.h
 	$(CC) $(CFLAGS) graficador.c
 
-naves.o: naves.c naves.h movimientos.h
+nave.o: nave.c nave.h movimientos.h
 	$(CC) $(CFLAGS) nave.c
 
-caracteres.o: caracteres.c caracteres.h naves.h
+caracteres.o: caracteres.c caracteres.h nave.h
 	$(CC) $(CFLAGS) caracteres.c
 
 movimientos.o: movimientos.c objetos.h movimientos.h
