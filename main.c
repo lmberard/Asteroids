@@ -1,4 +1,4 @@
-#include "naves.h"
+#include "nave.h"
 #include "caracteres.h"
 #include "movimientos.h"
 #include "vectores.h"
