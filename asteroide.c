@@ -1,10 +1,27 @@
 #include "asteroide.h"
 #include <SDL2/SDL.h>
 
+void verificar_limites_pantalla_ast(asteroide_t *asteroide)
+{
+	if(asteroide->posicion_x >= VENTANA_ANCHO)
+		asteroide->posicion_x = 10;
+				
+	if(asteroide->posicion_x <= 0)
+		asteroide->posicion_x = VENTANA_ANCHO-10;
+
+	if(asteroide->posicion_y >= VENTANA_ALTO)
+		asteroide->posicion_y = 10;
+
+	if(asteroide->posicion_y <=0)
+		asteroide->posicion_y = VENTANA_ALTO -10;
+}
+
 void asteroide_mover(asteroide_t *asteroide, float dt)
 {
 	modificar_parametros_asteroide(asteroide,dt);
+	verificar_limites_pantalla_ast(asteroide);
 }
+
 
 void asteroide_modificar(lista_t *lista, float dt, SDL_Renderer *renderer)
 {
