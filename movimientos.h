@@ -25,7 +25,7 @@ void rotar_vector(float **v, size_t n, float angulo);
 void verificar_limites_pantalla(nave_t *nave);
 
 //Inicializa las variables de la nave, utilizada al principio y en cada nueva partida.
-void inicializar_valores(fnave_t *nave);
+void inicializar_valores(nave_t *nave);
 
 void computar_pot(nave_t *nave);
 
