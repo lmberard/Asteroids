@@ -52,7 +52,7 @@ int main() {
 				// BEGIN código del alumno------------------------------------
 				switch(event.key.keysym.sym) {
 					case SDLK_UP:
-						computar_pot(&nave);//Aca falta hacer que la potencia sea por un solo instante, osea, un imnpulso, no cte.
+						nave.potencia+= INCREMENTO_POTENCIA;
 						break;
 					case SDLK_SPACE:
 						crear_disparo(lista_disparo,nave);//Esta funcion crea un disparo y lo agrega a la lista de disparos
@@ -74,15 +74,14 @@ int main() {
         		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00);
 
 			// BEGIN código del alumno-------------------------------------
-			nave.potencia -= nave.potencia * 0.1*dt;//Esto no funciona
 			nave_mover(&nave, dt);//Muevo la nave en un fx que modifica todos sus parametros
+			
 			disparos_modificar(lista_disparo,dt,renderer);//Esta fx modifica los parametros de todos los disparos y en simulatneo los grafica, esto lo hice asi para recorrer la lista una sola vez en vez de varias veces
 			asteroide_modificar(lista_asteroides,dt,renderer);
+			
 			tiempo += dt;
 
 			////////////////ZONA DE DIBUJO/////////////////
-			dibujar_palabra("ASTEROIDS BY MARTINA Y LUCIA", caracteres, tam_caracteres, 400, 15, ESCALA, renderer);
-
 			if(nave_dibujar(&nave, renderer)==false)
 				break;
 		
