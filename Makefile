@@ -38,11 +38,14 @@ diccionario.o: diccionario.h diccionario.c
 renderizar.o: renderizar.c renderizar.h diccionario.h
 	$(CC) $(CFLAGS) renderizar.c
 
+juego.o: juego.h
+	$(CC) $(CFLAGS) juego.c
 
-main.o: main.c config.h nave.h movimientos.h diccionario.h vectores.h renderizar.h graficador.h objetos.h disparo.h asteroide.h
+
+main.o: main.c config.h nave.h movimientos.h diccionario.h vectores.h renderizar.h graficador.h objetos.h disparo.h asteroide.h juego.h
 	$(CC) $(CFLAGS) main.c
 
-tp2: main.o nave.o caracteres.o movimientos.o vectores.o diccionario.o renderizar.o graficador.o iterador.o lista.o disparo.o asteroide.o
+tp2: main.o nave.o caracteres.o movimientos.o vectores.o diccionario.o renderizar.o graficador.o iterador.o lista.o disparo.o asteroide.o juego.o
 	$(CC) $(LFLAGS) $^ -o tp2 -lSDL2 -lm
 
 
