@@ -52,5 +52,5 @@ clean:
 install: tp2
 	cp $^ $(INSTALL_DIR)
 
-valgrind: tp1
+valgrind: tp2
 	valgrind --leak-check=full ./tp2
