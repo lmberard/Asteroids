@@ -39,20 +39,17 @@ void dibujar_palabra(char cadena[], const diccionario_t caracteres[], size_t tam
 }
 
 
-void dibujar_parametros(float puntos, float tiempo, 
-						const diccionario_t caracteres[], size_t tam_caracteres,
-						SDL_Renderer *renderer){
-
+void dibujar_parametros(float puntos, float mejor_puntaje, const diccionario_t caracteres[], size_t tam_caracteres, SDL_Renderer *renderer)
+{
 	char aux[30];
-
+	
 	//SCORE
-	sprintf(aux, "SCORE %04.f",puntos);
+	sprintf(aux, "BEST SCORE %04.f", mejor_puntaje);
 	dibujar_palabra(aux, caracteres, tam_caracteres, COLUM_1, FILA_1, ESCALA_LETRA , renderer);
-
-	//TIME
-	sprintf(aux, "TIME  %04.f", tiempo);
+	
+	sprintf(aux, "ACTUAL SCORE %04.f", puntos);
 	dibujar_palabra(aux, caracteres, tam_caracteres, COLUM_1, FILA_2, ESCALA_LETRA , renderer);
-
+	
 	//VIDAS
 	dibujar_palabra("LIVES", caracteres, tam_caracteres, COLUM_1, FILA_3, ESCALA_LETRA , renderer);
 
