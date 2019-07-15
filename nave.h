@@ -9,6 +9,14 @@
 #include "graficador.h"
 #include "objetos.h"
 
+//Función utilizada para chequear que la nave no se vaya de los límites de la pantalla (mundo cilindrico)
+void verificar_limites_pantalla(nave_t *nave);
+
+//Inicializa las variables de la nave, utilizada al principio y en cada nueva partida.
+void inicializar_valores(nave_t *nave);
+
+//Disminuye la potencia un porcentaje y verifica que este en un rango permitido
+void computar_pot(nave_t *nave);
 
 void nave_mover(nave_t *nave, float dt);
 bool nave_dibujar(nave_t *x, SDL_Renderer *r);
