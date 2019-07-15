@@ -55,7 +55,7 @@ if(colisiono_nave_asteroide(&nave, lista_asteroides)
 		comenzar_nueva_partida();
 }
 */
-
+/*
 void comenzar_nueva_vida(nave_t *nave, lista_t *lista_asteroides, SDL_Renderer *renderer)
 {
 		//destruir nave
@@ -77,7 +77,7 @@ void comenzar_nueva_partida()
 
 	//vuelvo a tener 4 vidas, tengo que inicializar la nave y crear los asteroides sobre los ejes
 }
-
+*/
 ///////////////////////////////////////////////////////////////////////////////
 
 
