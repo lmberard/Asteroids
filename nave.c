@@ -31,7 +31,7 @@ void inicializar_valores(nave_t *nave)
 			
 void computar_pot(nave_t *nave)
 {
-	nave->potencia -= nave->potencia*0.1;// en cada dt, se disminuye un 10%
+	nave->potencia -= nave->potencia*REDUCCION_POTENCIA;// en cada dt, se disminuye un 10%
 
 	if(nave->potencia <=0)
 		nave->potencia=NAVE_POTENCIA_INICIAL;
@@ -60,8 +60,8 @@ void modificar_parametros_nave(nave_t *nave,float dt)
 	nave->velocidad_x = computar_velocidad(nave->velocidad_x, nave->potencia*cos(nave->angulo),dt);
 	
 	//POR CADA DT LA VELOCIDAD DISMINUYE UN 1%
-	nave->velocidad_y -= nave->velocidad_y *0.01;
-	nave->velocidad_x -= nave->velocidad_x *0.01;
+	nave->velocidad_y -= nave->velocidad_y *REDUCCION_VELOCIDAD;
+	nave->velocidad_x -= nave->velocidad_x *REDUCCION_VELOCIDAD;
 
 	nave->posicion_y = computar_posicion(nave->posicion_y, nave->velocidad_y, dt);
 	nave->posicion_x = computar_posicion(nave->posicion_x, nave->velocidad_x, dt);
