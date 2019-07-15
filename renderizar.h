@@ -44,11 +44,11 @@ void dibujar_palabra(char cadena[], const diccionario_t caracteres[], size_t tam
 					float x_inicial, float y_inicial, float escala, 
 					SDL_Renderer *renderer);
 
-//Imprime en la terminal los mensajes SCORE, TIME, FUEL, HORIZONTAL SPEED Y VERTICAL SPEED con sus respectivos valores. 
+//Imprime en la terminal el tiempo y el puntaje con sus respectivos valores. 
 void dibujar_parametros(float puntos, float tiempo,
 						const diccionario_t caracteres[], size_t tam_caracteres, 
 						SDL_Renderer *renderer);
 
-bool dibujar_vidas(nave_t *nave, SDL_Renderer *r, size_t cant_vidas);
+bool dibujar_vidas( SDL_Renderer *r, nave_t *nave, size_t cant_vidas);
 
 #endif // _RENDERIZAR_H_
