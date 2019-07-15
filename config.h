@@ -55,7 +55,7 @@
 
 //defines graficador
 #define ESCALA_DISPARO 3
-#define ESCALA_NAVE 3
+#define ESCALA_NAVE 2
 #define ESCALA_VIDAS 0.6
 
 #endif // _CONFIG_H_
