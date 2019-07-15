@@ -37,6 +37,9 @@
 #define POS_Y_VIDAS 645
 #define OFFSET 11
 
+//defines reduccion porcentual para el movimiento de la nave
+#define REDUCCION_POTENCIA 0.1
+#define REDUCCION_VELOCIDAD 0.01
 
 //Defines asteroides
 #define VELOCIDAD_MAX_ASTEROIDE 15
