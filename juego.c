@@ -84,8 +84,8 @@ void comenzar_nueva_partida()
 //Funcion que devuelve true si el disparo se encuentra en una posicion cercana al asteroide(lo choca)
 bool disparo_choca_al_asteroide(disparo_t *disparo, asteroide_t *asteroide)
 {
-	distancia_x = fabs(disparo->posicion_x - asteroide->posicion_x);
-	distancia_y = fabs(disparo->posicion_y - asteroide->posicion_y);
+	float distancia_x = fabs(disparo->posicion_x - asteroide->posicion_x);
+	float distancia_y = fabs(disparo->posicion_y - asteroide->posicion_y);
 
 	return (distancia_x <= asteroide->radio && distancia_y <= asteroide->radio);
 }
@@ -137,9 +137,9 @@ Si no quedaran más asteroides en la pantalla se generarán nuevos asteroides co
 Cada vez que no queden asteroides se crearán 2 asteroides más que la vez anterior.
 #define AUMENTO_CANT_ASTEROIDES 2
 */
-void generar_nuevos_asteroides(lista_t *lista_asteroide, int cant_asteroides)
+void generar_nuevos_asteroides(lista_t *lista_asteroides, int cant_asteroides)
 {
-	if(lista_es_vacia(asteroide))
+	if(lista_es_vacia(lista_asteroides))
 	{
 		cant_asteroides += AUMENTO_CANT_ASTEROIDES;
 		for(int i = 0; i <= cant_asteroides; i++)
