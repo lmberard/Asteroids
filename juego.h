@@ -19,10 +19,10 @@ bool nave_choco_con_asteroide(nave_t *nave, asteroide_t *asteroide);
 bool colisiono_nave_asteroides(nave_t *nave, lista_t *lista_asteroides);
 
 //PROBLEMA
-void comenzar_nueva_vida(nave_t *nave, lista_t *lista_asteroides, SDL_Renderer *renderer);
+//void comenzar_nueva_vida(nave_t *nave, lista_t *lista_asteroides, SDL_Renderer *renderer);
 
 //PROBLEMAA
-void comenzar_nueva_partida();
+//void comenzar_nueva_partida();
 
 
 
