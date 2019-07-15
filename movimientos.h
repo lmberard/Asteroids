@@ -21,12 +21,5 @@ void trasladar_vector(float **v, size_t n, float dx, float dy);
 //dado un vector de n coordenadas rote cada una de ella un angulo(en radianes) con respecto al origen de coordenadas.
 void rotar_vector(float **v, size_t n, float angulo);
 
-//Función utilizada para chequear que la nave no se vaya de los límites de la pantalla (mundo cilindrico)
-void verificar_limites_pantalla(nave_t *nave);
-
-//Inicializa las variables de la nave, utilizada al principio y en cada nueva partida.
-void inicializar_valores(nave_t *nave);
-
-void computar_pot(nave_t *nave);
 
 #endif // _MOVIMIENTOS_H_
