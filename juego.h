@@ -39,7 +39,7 @@ void asignar_puntaje(asteroide_t *asteroide, float *puntos);
 
 
 //Si no hay mas asteroides en la pantalla, esta funcion genera nuevos asteroides pero cada vez que pasa se generan con mas cantidad.
-void generar_nuevos_asteroides(lista_t *lista_asteroide, int cant_asteroides);
+void generar_nuevos_asteroides(lista_t *lista_asteroides, int cant_asteroides);
 
 
 #endif 
