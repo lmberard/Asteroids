@@ -1,6 +1,5 @@
 #include "vectores.h"
 
-//// FUNCIONES PARA TRABAJAR CON VECTORES //////////////////////////////////
 
 void imprimir_vector(float **v, size_t filas, size_t columnas){
 
@@ -83,7 +82,8 @@ void copiar_valores_a_vector(float **v1, float **v2, size_t filas){
 	}
 }
 
-void swap(float *v1,float *v2){
+void swap(float *v1,float *v2)
+{
 	float aux = 0;
 	aux = *v1;
 	*v1 = *v2;
@@ -91,25 +91,21 @@ void swap(float *v1,float *v2){
 }
 
 
-void ordenar_v(float **v, size_t nn){
-	size_t i, cambios = 0;
-
-	do{
-		cambios = 0;
-
-		for (i = 0; i < nn-1; i++){
-			
-			if(v[i][0] > v[i+1][0]){
-
-				swap(&v[i][0], &v[i+1][0]);
-				swap(&v[i][1], &v[i+1][1]);
-
-				cambios ++;
-			}
-			
-		}
-
-	}while(cambios!=0);
-}
 
 
+void selection_sort(float *puntajes,size_t nro_partidas)  
+{  
+    int i, j, min_idx;  
+  
+ 
+    for (i = 0; i <nro_partidas-1; i++)  
+    {  
+        min_idx = i;  
+        for (j = i+1; j <nro_partidas; j++) 
+       		if (puntajes[j] > puntajes[min_idx])  
+            {
+            	min_idx = j;  
+       			swap(&puntajes[min_idx], &puntajes[i]);  
+            }	
+    }  
+}  

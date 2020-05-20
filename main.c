@@ -3,14 +3,12 @@
 #include "movimientos.h"
 #include "vectores.h"
 #include "diccionario.h"
-#include "renderizar.h"
-#include "config.h"
 #include "graficador.h"
 #include "objetos.h"
 #include "lista.h"
 #include "disparo.h"
 #include "asteroide.h"
-//#include "juego.h"
+#include "juego.h"
 
 int main() 
 {
@@ -25,32 +23,27 @@ int main()
 
 	int dormir = 0;
 	
-	if(graficador_inicializar(ARCHIVO_BIN,VENTANA_ANCHO, VENTANA_ALTO))//Aca levanto todos los sprites del archivo binario
+	if(graficador_inicializar(ARCHIVO_BIN,VENTANA_ANCHO, VENTANA_ALTO))
 		return EXIT_FAILURE;
 	
-	//zona de variables-----------------
-	nave_t nave;
-	float dt = 1/(float)JUEGO_FPS;
-	float tiempo = 0;
-	float puntos = 0;
-	//Tendria que hacer un vector dinamico donde vaya guardando los puntajes y una funcion que me diga cual de todos es el mejor
-	float mejor_puntaje = 0; //pero mientras uso esto jeje lol
+	nave_t *nave = nave_crear();
 
-	inicializar_valores(&nave);//Inicializo los valores de la nave
-	lista_t *lista_disparo = lista_crear(); //creo la lista de disparos,debo eliminarla al final		
-	lista_t *lista_asteroides = lista_crear();
 	int vidas_disponibles = CANT_VIDAS_INICIAL;
 	int cant_asteroides = CANT_ASTEROIDES_INICIAL;
-
-	for(size_t i=0; i<= cant_asteroides; i++)//Aca estoy creando los asteroides que aparecen apenas empieza el juego
-	{	
-		crear_asteroide(lista_asteroides);
-	}
-	//aca se podria usar la funcion de generar_nuevos_asteroides()
-
-	//end zona de variables-------------------------------
+	float puntos = 0;
+	float mejor_puntaje = 0;
+	size_t nro_partida = 0;
+	float *puntajes=(float*)malloc(sizeof(float));
+	disparo_t* disparo;
+	lista_t *lista_disparo = lista_crear(); 	
+	lista_t *lista_asteroides = lista_crear();
+	int flag =0;
+	inicializar_valores(nave);
+	cargar_asteroides(lista_asteroides, cant_asteroides);
+	
 	unsigned int ticks = SDL_GetTicks();
-	while(1) {
+	while(1)
+	{
 		if(SDL_PollEvent(&event)) {
 			if (event.type == SDL_QUIT)
 				break;
@@ -58,16 +51,19 @@ int main()
 				// BEGIN código del alumno------------------------------------
 				switch(event.key.keysym.sym) {
 					case SDLK_UP:
-						nave.potencia+= INCREMENTO_POTENCIA;
-						break;
-					case SDLK_SPACE:
-						crear_disparo(lista_disparo,nave);
+						nave->potencia+= INCREMENTO_POTENCIA;	
+						flag = 1;	
 						break;
 					case SDLK_RIGHT:				
-						nave.angulo -= NAVE_ROTACION_PASO;
+						nave->angulo -= NAVE_ROTACION_PASO;
 						break;
 					case SDLK_LEFT:					
-						nave.angulo += NAVE_ROTACION_PASO;
+						nave->angulo += NAVE_ROTACION_PASO;
+						break;
+					case SDLK_SPACE:
+						disparo = disparo_crear();
+						cargar_parametros_disparo(disparo,nave);
+						lista_insertar_final(lista_disparo,disparo);
 						break;
 				}
 				// END código del alumno--------------------------------------------------
@@ -77,34 +73,64 @@ int main()
         		SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
         		SDL_RenderClear(renderer);
         		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00);
-
+        		
 			// BEGIN código del alumno-------------------------------------
-			nave_mover(&nave, dt);//Muevo la nave en un fx que modifica todos sus parametros
-			
-			disparos_modificar(lista_disparo,dt,renderer);
-			//Esta fx modifica los parametros de todos los disparos y en simulatneo los grafica, esto lo hice asi para recorrer la lista una sola vez en vez de varias veces
-			asteroide_modificar(lista_asteroides,dt,renderer);
+			nave_mover(nave, DT);
+			lista_disparos_modificar(&lista_disparo, DT, renderer);
 
-			////////////////ZONA DE DIBUJO/////////////////
-			if(nave_dibujar(&nave, renderer)==false)
+			if(flag==1)
+				chorro_dibujar(nave,renderer);
+			
+			procesar_disparos_asteroides(lista_disparo,lista_asteroides,&puntos);
+			lista_asteroides_mover_dibujar(lista_asteroides,DT,renderer);
+			
+			if(nave_dibujar(nave, renderer)==false)
 				break;
-			/*
-			if(colisiono_nave_asteroide(&nave, lista_asteroides)
+			
+			if(lista_es_vacia(lista_asteroides))
 			{
-				vidas_disponibles --;
-				if(hay_vidas_disponibles(vidas_disponibles))
-					comenzar_nueva_vida(&nave, lista_asteroides);
-				else
-					comenzar_nueva_partida();
+				cant_asteroides += AUMENTO_CANT_ASTEROIDES;
+				cargar_asteroides(lista_asteroides, cant_asteroides);
 			}
-			*/
-			//aca de nuevo el problema del mejor_puntaje:
-			dibujar_parametros(puntos, mejor_puntaje, caracteres, tam_caracteres, renderer);
-			
-			dibujar_vidas(&nave, renderer,vidas_disponibles);
-			////////////////////////////////////////////////
-			
-			
+			flag =0;
+			if(nave_choca_asteroide(lista_asteroides,nave))
+			{	
+				if(hay_vidas_disponibles(vidas_disponibles))
+				{
+					puntajes[nro_partida] = puntos;
+					vidas_disponibles --;
+	
+					dormir = 1500;
+
+					reiniciar_nave(nave,angulo_nave(nave));
+				}
+				else
+				{
+					nro_partida ++;
+					puntajes = (float*) realloc(puntajes, sizeof(float));
+					puntajes[nro_partida]=puntos;
+
+					mejor_puntaje = procesar_mejor_puntaje(puntajes,nro_partida);
+					dibujar_palabra("GAME OVER", VENTANA_ANCHO/2, 200, 7, renderer);
+					dormir = 1500;
+					while(1)
+						if(SDL_PollEvent(&event)) 
+						{
+							if (event.type == SDL_QUIT)
+									break;
+				
+							if (event.type == SDL_KEYDOWN)
+								if(event.key.keysym.sym == SDLK_SPACE) 
+									break;
+						}
+					reiniciar_nave(nave,angulo_nave(nave));
+					reiniciar_partida(&lista_asteroides,&vidas_disponibles,&puntos);
+				}
+			}
+
+			dibujar_parametros(&puntos, mejor_puntaje, renderer);
+			dibujar_vidas(renderer,vidas_disponibles);
+					
 		// END código del alumno----------------------------------------------
         	SDL_RenderPresent(renderer);
 		ticks = SDL_GetTicks() - ticks;
@@ -118,9 +144,11 @@ int main()
 		ticks = SDL_GetTicks();
 	}
 	// BEGIN código del alumno------------------------------------------------
-	//graficador_finalizar();
+	graficador_finalizar();
 	lista_destruir(lista_disparo,free);
 	lista_destruir(lista_asteroides,free);
+	free(puntajes);
+	nave_liberar(nave);
 
 	// END código del alumno--------------------------------------------------
 
@@ -130,4 +158,3 @@ int main()
 	SDL_Quit();
 	return 0;
 }
-

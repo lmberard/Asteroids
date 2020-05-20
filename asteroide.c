@@ -18,81 +18,80 @@ void verificar_limites_pantalla_ast(asteroide_t *asteroide)
 
 void asteroide_mover(asteroide_t *asteroide, float dt)
 {
-	modificar_parametros_asteroide(asteroide,dt);
-	verificar_limites_pantalla_ast(asteroide);
-}
-
-
-void asteroide_modificar(lista_t *lista, float dt, SDL_Renderer *renderer)
-{
-	if (lista_es_vacia(lista))
-		return;
-
-	iterador_t *iterador_asteroide = iterador_crear(lista);
-	while(!iterador_termino(iterador_asteroide))
-	{
-		asteroide_mover(iterador_actual(iterador_asteroide)->dato,dt);
-		asteroide_dibujar(iterador_actual(iterador_asteroide)->dato,renderer);//Los asteroide tienen un pequeño delay no se por qué
-		//if choco eliminar_asteroide(eliminar asteroide ya esta hecha aca abajo)
-		iterador_siguiente(iterador_asteroide);//validar
-	}
-	iterador_destruir(iterador_asteroide);
-}
-
-bool asteroide_dibujar(asteroide_t *asteroide, SDL_Renderer *r)//VALIDAR
-{
-	if((graficador_dibujar(r,asteroide->nombre, asteroide->radio , asteroide->posicion_x, asteroide->posicion_y, asteroide->angulo))==false);
-		return true;
-}
-
-
-void eliminar_asteroide(struct nodo *nodo, lista_t *lista)
-{
-	eliminar_nodo(lista,nodo);
-}
-
-void modificar_parametros_asteroide(asteroide_t *asteroide,float dt)
-{
 	asteroide->velocidad_y = computar_velocidad(asteroide->velocidad_y,0,dt);
 	asteroide->velocidad_x = computar_velocidad(asteroide->velocidad_x,0,dt);
 
 	asteroide->posicion_y = computar_posicion(asteroide->posicion_y, asteroide->velocidad_y, dt);
 	asteroide->posicion_x = computar_posicion(asteroide->posicion_x, asteroide->velocidad_x, dt);
 
+	verificar_limites_pantalla_ast(asteroide);
 }
 
-void generar_asteroide(asteroide_t *nuevo_asteroide)
+
+void lista_asteroides_mover_dibujar(lista_t *lista, float dt, SDL_Renderer *renderer)
 {
-	nuevo_asteroide->posicion_x = generar_aleatorio(0,(float)VENTANA_ANCHO);
-	nuevo_asteroide->posicion_y = generar_aleatorio(0,(float)VENTANA_ALTO);
-	nuevo_asteroide->radio =  asignar_radio((int)generar_aleatorio(0,3));
+	if (lista_es_vacia(lista))
+		return;
+	iterador_t *iterador_asteroide = iterador_crear(lista);
+
+	while(!iterador_termino(iterador_asteroide))
+	{	
+		asteroide_mover(iterador_actual(iterador_asteroide)->dato,dt);
+
+		if(!asteroide_dibujar(iterador_actual(iterador_asteroide)->dato,renderer))
+			break;
+
+		if(!iterador_siguiente(iterador_asteroide))
+			break;
+
+	}
+	iterador_liberar(iterador_asteroide);
+}
+
+bool asteroide_dibujar(asteroide_t *asteroide, SDL_Renderer *r)
+{
+	return graficador_dibujar(r,asteroide->nombre, asteroide->radio , asteroide->posicion_x, asteroide->posicion_y, asteroide->angulo);
+}
+
+
+void cargar_parametros_asteroide(asteroide_t *nuevo_asteroide, float posicion_x, float posicion_y)
+{
+	nuevo_asteroide->posicion_x = posicion_x;
+	nuevo_asteroide->posicion_y = posicion_y;
 
 	nuevo_asteroide->angulo = generar_aleatorio(0, PI);
 
 	nuevo_asteroide->velocidad_x = generar_aleatorio(nuevo_asteroide->angulo -100,nuevo_asteroide->angulo +100);
 	nuevo_asteroide->velocidad_y = generar_aleatorio(nuevo_asteroide->angulo -100,nuevo_asteroide->angulo +100);
-	nuevo_asteroide->nombre = asignar_sprite((int) generar_aleatorio(1,CANT_ASTEROIDES_SPRITE));
+
+	nuevo_asteroide->nombre = asignar_sprite((int)generar_aleatorio(1,CANT_ASTEROIDES_SPRITE));
 }
 
-
-void crear_asteroide(lista_t *lista)
+void cargar_radio_asteroide(asteroide_t *asteroide , int radio_ast)
 {
-	asteroide_t *asteroide = (asteroide_t*)malloc(sizeof(asteroide_t)); //VALIDAR, no recuerdo bien como validar fx que devuelven void
-	generar_asteroide(asteroide);
-	lista_insertar_final(lista,asteroide); //VALIDAR
+	asteroide->radio = radio_ast;
 }
 
-/*La funcion recibe el valor minimo y maximo entre los cuales devolvera un valor aleatorio de tipo flotante*/
-float generar_aleatorio(float minimo, float maximo)
+asteroide_t *asteroide_crear()
 {
-	float valor=0;
-	float aleatorio;
-	aleatorio=(float)rand();
-	valor = (float) (( aleatorio / RAND_MAX)* (maximo - minimo) + minimo);
-	return valor;
+	asteroide_t *asteroide = (asteroide_t*)malloc(sizeof(asteroide_t));
+	if (asteroide == NULL)
+		return NULL;
+	else return asteroide;
 }
 
-char *asignar_sprite(int numero_sprite)//Es muy villero esto? se puede buscar otra implementacion con enum sino
+void generar_asteroides(lista_t *lista, size_t cant_asteroides, int radio_ast, float posicion_x, float posicion_y)
+{
+	for(size_t i = 0; i < cant_asteroides;i++)
+	{
+		asteroide_t *asteroide = asteroide_crear();
+		cargar_parametros_asteroide(asteroide,posicion_x,posicion_y);
+		cargar_radio_asteroide(asteroide,radio_ast);
+		lista_insertar_final(lista,asteroide); 
+	}	
+}
+
+char *asignar_sprite(int numero_sprite)
 {
 	char* nombre = NULL;
 	switch(numero_sprite)
@@ -112,21 +111,53 @@ char *asignar_sprite(int numero_sprite)//Es muy villero esto? se puede buscar ot
 	}
 	return nombre;
 }
-
-float asignar_radio(int nro_radio)//idem
+void cargar_asteroides(lista_t *lista, int cant_asteroides)
 {
-	float radio;
-	switch(nro_radio)
+	for(size_t i = 0; i < cant_asteroides; i++)
 	{
-		case 1:
-			radio = RADIO_AST_1;
-			break;
-		case 2:
-			radio = RADIO_AST_2;
-			break;
-		case 3:
-			radio = RADIO_AST_3;
-			break;
+		float posicion_x = generar_aleatorio(0,(float)VENTANA_ANCHO);
+		float posicion_y = generar_aleatorio(0,(float)VENTANA_ALTO);
+		generar_asteroides(lista,1, RADIO_AST_3,posicion_x,posicion_y);
 	}
-	return radio;
+}	
+
+
+
+void partir_asteroide(lista_t *lista, asteroide_t *asteroide)
+{
+	if(asteroide->radio == RADIO_AST_1)
+	{
+		return;
+	}
+	if(asteroide->radio == RADIO_AST_2)
+	{
+		generar_asteroides(lista,AUMENTO_CANT_ASTEROIDES,RADIO_AST_1,asteroide->posicion_x,asteroide->posicion_y);
+		liberar_asteroide(asteroide);
+		return;
+	}
+	if(asteroide->radio == RADIO_AST_3)
+	{
+		generar_asteroides(lista,AUMENTO_CANT_ASTEROIDES,RADIO_AST_2,asteroide->posicion_x,asteroide->posicion_y);
+		liberar_asteroide(asteroide);
+		return;
+	}
 }
+void liberar_asteroide(asteroide_t *asteroide)
+{
+	free(asteroide);
+}
+
+
+float radio_ast(asteroide_t *asteroide)
+{
+	return asteroide->radio;
+}
+
+
+float distancia_objeto_asteroide(float posicion_x, float posicion_y, asteroide_t *asteroide)
+{
+	float distancia_x = (asteroide->posicion_x - posicion_x) * (asteroide->posicion_x - posicion_x );
+	float distancia_y = (asteroide->posicion_y - posicion_y) * (asteroide->posicion_y - posicion_y );
+	return sqrt(distancia_x + distancia_y);
+}
+ 

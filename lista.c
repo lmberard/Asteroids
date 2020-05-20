@@ -1,9 +1,8 @@
 #include "lista.h"
 #include <stdlib.h>
 
-
-struct nodo *nodo_crear(void *d) {
-	struct nodo *n = malloc(sizeof(struct nodo));
+nodo_t *nodo_crear(void *d) {
+	nodo_t *n = malloc(sizeof(nodo_t));
 	if(n == NULL)
 		return NULL;
 
@@ -23,12 +22,11 @@ lista_t *lista_crear()
 	return l;
 }
 
-
 void lista_destruir(lista_t *l, void (*destruir_dato)(void *d))
 {
-	struct nodo *n = l->prim;
+	nodo_t *n = l->prim;
 	while(n != NULL) {
-		struct nodo *sig = n->sig;
+		nodo_t *sig = n->sig;
 
 		if(destruir_dato != NULL)
 			destruir_dato(n->dato);
@@ -46,7 +44,7 @@ bool lista_es_vacia(const lista_t *l)
 }
 
 bool lista_insertar_comienzo(lista_t *l, void *d) {
-	struct nodo *n = nodo_crear(d);
+	nodo_t *n = nodo_crear(d);
 	if(n == NULL)
 		return false;
 
@@ -58,18 +56,15 @@ bool lista_insertar_comienzo(lista_t *l, void *d) {
 
 bool lista_insertar_final(lista_t *l, void *d)
 {
-	struct nodo *n = nodo_crear(d);
+	nodo_t *n = nodo_crear(d);
 	if(n == NULL) return false;
 
-	// Si estÃ¡ vacÃ­a inserto al principio:
 	if(l->prim == NULL)
 	{
 		l->prim = n;
 		return true;
 	}
-
-	// La lista no estaba vacÃ­a:
-	struct nodo *aux = l->prim;
+	nodo_t *aux = l->prim;
 	while(aux->sig != NULL)
 		aux = aux->sig;
 
@@ -77,6 +72,7 @@ bool lista_insertar_final(lista_t *l, void *d)
 
 	return true;
 }
+
 
 void *lista_extraer_primero(lista_t *l) {
 	if(lista_es_vacia(l))
@@ -91,48 +87,37 @@ void *lista_extraer_primero(lista_t *l) {
 	return d;
 }
 
-void *lista_buscar(const lista_t *l, const void *d, int (*cmp)(const void *a, const void *b)) {
-
-	struct nodo *n = l->prim;
-	while(n != NULL) {
-		if(cmp(n->dato, d) == 0)
-			return n->dato;
-
-		n = n->sig;
-	}
-
-	return NULL;
+void destruir_dato(void *dato)
+{
+	free(dato);
 }
 
-void lista_mapear(lista_t *l, void *(*f)(void *dato))
+bool eliminar_nodo(lista_t *lista, nodo_t *nodo)
 {
-	struct	nodo *nodo_aux = l->prim;
-
-	while(nodo_aux!=NULL)
-	{
-		nodo_aux->dato = f(nodo_aux->dato);
-		nodo_aux = nodo_aux->sig;
-	}
-}
-
-
-bool eliminar_nodo(lista_t *lista, struct nodo *nodo)
-{
-	struct nodo *act = NULL;
-	struct nodo *ant = NULL;
+	nodo_t *act = NULL;
+	nodo_t *ant = NULL;
 	if(lista_es_vacia(lista))
 		return false;
-
+	
 	act=lista->prim;
+
+	if(lista->prim==nodo)
+	{
+		act=act->sig;	
+		free(lista->prim->dato);
+		free(lista->prim);
+		lista->prim=act;
+		return true;
+	}
 	ant=lista->prim;
 	act=act->sig;
-
+	
 	while (act!=NULL)
 	{
-		if(nodo==act)//villero, encontrar forma alternativa de hacer
+		if(nodo==act)
 		{
 			ant->sig=act->sig;
-			free(act->dato); 
+			free(act->dato);
 			free(act);
 			return true;
 		}	
@@ -141,4 +126,3 @@ bool eliminar_nodo(lista_t *lista, struct nodo *nodo)
 	}
 	return false;
 }
-
