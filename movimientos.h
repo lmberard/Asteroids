@@ -3,11 +3,10 @@
 
 #include <stdio.h>
 #include <math.h>
-#include "config.h"
+
 #include "objetos.h"
 
-//FUNCIONES UTILIZADAS PARA MOVER LA NAVE--------------------------------------------------------------------------
-//MOVIMIENTOS.C
+#define DT (1.0/JUEGO_FPS)
 
 //dada la velocidad actual vi, la aceleración a y el paso temporal dt devuelva la velocidad del próximo instante.
 float computar_velocidad(float vi, float a, float dt);
