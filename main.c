@@ -48,7 +48,7 @@ int main()
 			if (event.type == SDL_QUIT)
 				break;
 	    		if (event.type == SDL_KEYDOWN) {
-				// BEGIN código del alumno------------------------------------
+				// ------------------------------------
 				switch(event.key.keysym.sym) {
 					case SDLK_UP:
 						nave->potencia+= INCREMENTO_POTENCIA;	
@@ -66,7 +66,7 @@ int main()
 						lista_insertar_final(lista_disparo,disparo);
 						break;
 				}
-				// END código del alumno--------------------------------------------------
+				// -------------------------------------------------
 			}
 			continue;
 		}
@@ -74,7 +74,7 @@ int main()
         		SDL_RenderClear(renderer);
         		SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0x00);
         		
-			// BEGIN código del alumno-------------------------------------
+			// -------------------------------------
 			nave_mover(nave, DT);
 			lista_disparos_modificar(&lista_disparo, DT, renderer);
 
@@ -131,7 +131,7 @@ int main()
 			dibujar_parametros(&puntos, mejor_puntaje, renderer);
 			dibujar_vidas(renderer,vidas_disponibles);
 					
-		// END código del alumno----------------------------------------------
+		// ----------------------------------------------
         	SDL_RenderPresent(renderer);
 		ticks = SDL_GetTicks() - ticks;
 		if(dormir) {
@@ -143,14 +143,14 @@ int main()
 			SDL_Delay(1000 / JUEGO_FPS - ticks);
 		ticks = SDL_GetTicks();
 	}
-	// BEGIN código del alumno------------------------------------------------
+	// ------------------------------------------------
 	graficador_finalizar();
 	lista_destruir(lista_disparo,free);
 	lista_destruir(lista_asteroides,free);
 	free(puntajes);
 	nave_liberar(nave);
 
-	// END código del alumno--------------------------------------------------
+	// --------------------------------------------------
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
